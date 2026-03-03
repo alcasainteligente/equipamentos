@@ -249,7 +249,7 @@ export default function App() {
                       type="text"
                       value={switchBrand}
                       onChange={(e) => setSwitchBrand(e.target.value)}
-                      placeholder="Ex: Efapel Logus 90, Legrand Valena..."
+                      placeholder="Ex: Lisboa, Porto, Montijo..."
                       className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
                     />
                   </div>
