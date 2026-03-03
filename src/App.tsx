@@ -129,8 +129,8 @@ export default function App() {
                       key={cat.id}
                       onClick={() => setActiveCategory(cat.id)}
                       className={`w-full flex items-center gap-4 px-6 py-4 rounded border transition-all group ${activeCategory === cat.id
-                          ? 'bg-cyan-500/10 border-cyan-500/50 text-cyan-400'
-                          : 'bg-white/5 border-transparent hover:border-white/10 text-gray-400 hover:text-white'
+                        ? 'bg-cyan-500/10 border-cyan-500/50 text-cyan-400'
+                        : 'bg-white/5 border-transparent hover:border-white/10 text-gray-400 hover:text-white'
                         }`}
                     >
                       <cat.icon size={20} className={activeCategory === cat.id ? 'text-cyan-400' : 'text-gray-500 group-hover:text-white'} />
@@ -243,7 +243,7 @@ export default function App() {
 
                   <div className="mb-12">
                     <label className="block text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
-                      Marca/Série dos seus interruptores
+                      Sua Localidade/Cidade
                     </label>
                     <input
                       type="text"
