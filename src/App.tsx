@@ -243,13 +243,13 @@ export default function App() {
 
                   <div className="mb-12">
                     <label className="block text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
-                      Sua Localidade/Cidade
+                      TESTE LOCALIDADE
                     </label>
                     <input
                       type="text"
                       value={switchBrand}
                       onChange={(e) => setSwitchBrand(e.target.value)}
-                      placeholder="Ex: Lisboa, Porto, Montijo, Almada..."
+                      placeholder="TESTE"
                       className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
                     />
                   </div>
