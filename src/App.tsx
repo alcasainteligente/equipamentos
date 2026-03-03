@@ -115,7 +115,7 @@ export default function App() {
           {view === 'configurator' && (
             <motion.div
               key="configurator"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 0 }}  // ALTERADO: de 0 para 1
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col md:flex-row gap-12 py-8"
@@ -217,148 +217,144 @@ export default function App() {
                   </button>
                 </div>
               </div>
-            </motion.div>
-          )}
-
-          {/* SUMMARY VIEW */}
-          {view === 'summary' && (
-            <motion.div
-              key="summary"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="max-w-7xl mx-auto py-8"
+              <motion.div
+                key="summary"
+                initial={{ opacity: 1, x: 0 }}  // ALTERADO: de 0 para 1
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="max-w-7xl mx-auto py-8"
+              >
             >
-              {!submitted ? (
-                <>
-                  <button
-                    onClick={() => setView('configurator')}
-                    className="text-gray-400 hover:text-white flex items-center gap-2 mb-8 text-xs font-bold tracking-widest uppercase"
+                {!submitted ? (
+                  <>
+                    <button
+                      onClick={() => setView('configurator')}
+                      className="text-gray-400 hover:text-white flex items-center gap-2 mb-8 text-xs font-bold tracking-widest uppercase"
+                    >
+                      ← Voltar à seleção
+                    </button>
+
+                    <h2 className="text-4xl font-bold mb-2 text-white">Resumo do Pedido</h2>
+                    <p className="text-gray-400 mb-8">Confirme os equipamentos e solicite o seu orçamento.</p>
+
+                    <div className="mb-12">
+                      <label className="block text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
+                        TESTE LOCALIDADE
+                      </label>
+                      <input
+                        type="text"
+                        value={switchBrand}
+                        onChange={(e) => setSwitchBrand(e.target.value)}
+                        placeholder="TESTE"
+                        className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                      />
+                    </div>
+
+                    {totalItems === 0 ? (
+                      <div className="text-center py-16 bg-white/5 rounded border border-dashed border-white/10">
+                        <ShoppingCart className="mx-auto text-gray-600 mb-6" size={48} />
+                        <p className="text-gray-400 mb-6">Ainda não selecionou nenhum equipamento.</p>
+                        <button
+                          onClick={() => setView('configurator')}
+                          className="text-cyan-400 font-bold text-sm tracking-widest uppercase hover:text-cyan-300 border-b border-cyan-400/30 pb-1"
+                        >
+                          Começar a adicionar
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-8">
+                        <div className="space-y-4">
+                          {CATEGORIES.map(category => {
+                            const categoryDevices = DEVICES.filter(d => d.category === category.id);
+                            const selectedDevices = categoryDevices.filter(d => quantities[d.id] > 0);
+
+                            if (selectedDevices.length === 0) return null;
+
+                            return (
+                              <div key={category.id} className="bg-white/5 rounded border border-white/10 overflow-hidden flex flex-col md:flex-row">
+                                <div className="bg-white/5 px-6 py-4 md:w-56 border-b md:border-b-0 md:border-r border-white/10 flex md:flex-col items-center md:justify-center gap-3 md:text-center shrink-0">
+                                  <div className="text-cyan-400 p-2 bg-cyan-500/10 rounded-lg">
+                                    <category.icon size={24} />
+                                  </div>
+                                  <h3 className="font-bold text-xs uppercase tracking-widest text-white">
+                                    {category.label}
+                                  </h3>
+                                </div>
+                                <div className="p-4 flex-1 flex flex-wrap gap-3 items-center content-center">
+                                  {selectedDevices.map(device => (
+                                    <div key={device.id} className="flex items-center gap-3 bg-black/20 border border-white/5 rounded-lg px-4 py-2 hover:border-white/20 transition-colors">
+                                      <span className="font-medium text-gray-300 text-sm">{device.name}</span>
+                                      <span className="font-bold text-cyan-400 text-xs bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+                                        x{quantities[device.id]}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        <div className="flex flex-col md:flex-row items-center justify-end gap-6 pt-4">
+                          <div className="bg-white/5 px-8 py-4 flex flex-col justify-center items-center border border-white/10 rounded text-center min-w-[200px]">
+                            <span className="text-gray-400 font-medium text-xs uppercase tracking-wider mb-1">Equipamentos</span>
+                            <span className="text-3xl font-bold text-white">{totalItems}</span>
+                          </div>
+
+                          <div className="flex flex-col gap-3 w-full md:w-auto">
+                            <button
+                              onClick={handleEmailSubmit}
+                              disabled={isSubmitting}
+                              className="bg-orange-500 text-white px-8 py-3 rounded font-bold text-sm tracking-widest uppercase hover:bg-orange-600 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(249,115,22,0.2)] w-full"
+                            >
+                              <Mail size={18} />
+                              Enviar Email
+                            </button>
+                            <button
+                              onClick={handleWhatsappSubmit}
+                              disabled={isSubmitting}
+                              className="bg-[#25D366] text-white px-8 py-3 rounded font-bold text-sm tracking-widest uppercase hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(37,211,102,0.2)] w-full"
+                            >
+                              <MessageCircle size={18} />
+                              Enviar WhatsApp
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-center py-24 px-4"
                   >
-                    ← Voltar à seleção
-                  </button>
+                    <div className="w-24 h-24 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
+                      <Check size={48} strokeWidth={2} />
+                    </div>
+                    <h2 className="text-4xl font-bold text-white mb-4 tracking-tight">Configuração Validada</h2>
+                    <p className="text-gray-400 max-w-md mx-auto mb-12 leading-relaxed">
+                      A sua configuração foi registada com sucesso.
+                    </p>
 
-                  <h2 className="text-4xl font-bold mb-2 text-white">Resumo do Pedido</h2>
-                  <p className="text-gray-400 mb-8">Confirme os equipamentos e solicite o seu orçamento.</p>
-
-                  <div className="mb-12">
-                    <label className="block text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
-                      TESTE LOCALIDADE
-                    </label>
-                    <input
-                      type="text"
-                      value={switchBrand}
-                      onChange={(e) => setSwitchBrand(e.target.value)}
-                      placeholder="TESTE"
-                      className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
-                    />
-                  </div>
-
-                  {totalItems === 0 ? (
-                    <div className="text-center py-16 bg-white/5 rounded border border-dashed border-white/10">
-                      <ShoppingCart className="mx-auto text-gray-600 mb-6" size={48} />
-                      <p className="text-gray-400 mb-6">Ainda não selecionou nenhum equipamento.</p>
+                    <div className="flex flex-col gap-4 max-w-xs mx-auto">
                       <button
-                        onClick={() => setView('configurator')}
-                        className="text-cyan-400 font-bold text-sm tracking-widest uppercase hover:text-cyan-300 border-b border-cyan-400/30 pb-1"
+                        onClick={() => {
+                          setSubmitted(false);
+                          setQuantities({});
+                          setView('configurator');
+                          setContactInfo({ name: '', email: '', phone: '', notes: '' });
+                        }}
+                        className="bg-white text-black px-8 py-4 rounded font-bold text-sm tracking-widest uppercase hover:bg-gray-200 transition-colors"
                       >
-                        Começar a adicionar
+                        Nova Configuração
                       </button>
                     </div>
-                  ) : (
-                    <div className="space-y-8">
-                      <div className="space-y-4">
-                        {CATEGORIES.map(category => {
-                          const categoryDevices = DEVICES.filter(d => d.category === category.id);
-                          const selectedDevices = categoryDevices.filter(d => quantities[d.id] > 0);
-
-                          if (selectedDevices.length === 0) return null;
-
-                          return (
-                            <div key={category.id} className="bg-white/5 rounded border border-white/10 overflow-hidden flex flex-col md:flex-row">
-                              <div className="bg-white/5 px-6 py-4 md:w-56 border-b md:border-b-0 md:border-r border-white/10 flex md:flex-col items-center md:justify-center gap-3 md:text-center shrink-0">
-                                <div className="text-cyan-400 p-2 bg-cyan-500/10 rounded-lg">
-                                  <category.icon size={24} />
-                                </div>
-                                <h3 className="font-bold text-xs uppercase tracking-widest text-white">
-                                  {category.label}
-                                </h3>
-                              </div>
-                              <div className="p-4 flex-1 flex flex-wrap gap-3 items-center content-center">
-                                {selectedDevices.map(device => (
-                                  <div key={device.id} className="flex items-center gap-3 bg-black/20 border border-white/5 rounded-lg px-4 py-2 hover:border-white/20 transition-colors">
-                                    <span className="font-medium text-gray-300 text-sm">{device.name}</span>
-                                    <span className="font-bold text-cyan-400 text-xs bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
-                                      x{quantities[device.id]}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      <div className="flex flex-col md:flex-row items-center justify-end gap-6 pt-4">
-                        <div className="bg-white/5 px-8 py-4 flex flex-col justify-center items-center border border-white/10 rounded text-center min-w-[200px]">
-                          <span className="text-gray-400 font-medium text-xs uppercase tracking-wider mb-1">Equipamentos</span>
-                          <span className="text-3xl font-bold text-white">{totalItems}</span>
-                        </div>
-
-                        <div className="flex flex-col gap-3 w-full md:w-auto">
-                          <button
-                            onClick={handleEmailSubmit}
-                            disabled={isSubmitting}
-                            className="bg-orange-500 text-white px-8 py-3 rounded font-bold text-sm tracking-widest uppercase hover:bg-orange-600 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(249,115,22,0.2)] w-full"
-                          >
-                            <Mail size={18} />
-                            Enviar Email
-                          </button>
-                          <button
-                            onClick={handleWhatsappSubmit}
-                            disabled={isSubmitting}
-                            className="bg-[#25D366] text-white px-8 py-3 rounded font-bold text-sm tracking-widest uppercase hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(37,211,102,0.2)] w-full"
-                          >
-                            <MessageCircle size={18} />
-                            Enviar WhatsApp
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="text-center py-24 px-4"
-                >
-                  <div className="w-24 h-24 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.1)]">
-                    <Check size={48} strokeWidth={2} />
-                  </div>
-                  <h2 className="text-4xl font-bold text-white mb-4 tracking-tight">Configuração Validada</h2>
-                  <p className="text-gray-400 max-w-md mx-auto mb-12 leading-relaxed">
-                    A sua configuração foi registada com sucesso.
-                  </p>
-
-                  <div className="flex flex-col gap-4 max-w-xs mx-auto">
-                    <button
-                      onClick={() => {
-                        setSubmitted(false);
-                        setQuantities({});
-                        setView('configurator');
-                        setContactInfo({ name: '', email: '', phone: '', notes: '' });
-                      }}
-                      className="bg-white text-black px-8 py-4 rounded font-bold text-sm tracking-widest uppercase hover:bg-gray-200 transition-colors"
-                    >
-                      Nova Configuração
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </motion.div>
+                  </motion.div>
+                )}
+              </motion.div>
           )}
-        </AnimatePresence>
+            </AnimatePresence>
       </main>
 
       {/* Footer */}
