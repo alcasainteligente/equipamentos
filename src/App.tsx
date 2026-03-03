@@ -243,7 +243,7 @@ export default function App() {
 
                   <div className="mb-12">
                     <label className="block text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
-                      <label className="block text-gray-400 text-xs font-bold">MINHA LOCALIDADE</label>
+                      Sua Localidade/Cidade
                     </label>
                     <input
                       type="text"
